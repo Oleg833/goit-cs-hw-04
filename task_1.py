@@ -2,10 +2,11 @@ import threading
 from queue import Queue
 import time
 
+
 def search_in_file(file_path, keywords, result_queue):
     matches = {}
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
             for keyword in keywords:
                 if keyword in content:
@@ -16,13 +17,16 @@ def search_in_file(file_path, keywords, result_queue):
     except FileNotFoundError:
         print(f"Файл {file_path} не знайдено.")
 
+
 def main_threading(files, keywords):
     start_time = time.perf_counter()
     result_queue = Queue()
 
     threads = []
     for file_path in files:
-        thread = threading.Thread(target=search_in_file, args=(file_path, keywords, result_queue))
+        thread = threading.Thread(
+            target=search_in_file, args=(file_path, keywords, result_queue)
+        )
         thread.start()
         threads.append(thread)
 
@@ -33,11 +37,15 @@ def main_threading(files, keywords):
     while not result_queue.empty():
         results.append(result_queue.get())
 
-    print(f"Час виконання: {time.perf_counter() - start_time} секунд")
+    print(
+        f"Час багатопотокового виконання: {time.perf_counter() - start_time: .5f} секунд"
+    )
     return results
+
 
 if __name__ == "__main__":
     files = ["./text_1.txt", "./text_2.txt", "./text_3.txt"]
     keywords = ["Alice", "Jack", "Joseph"]
     results = main_threading(files, keywords)
-    print(results)
+    for result in results:
+        print(result)

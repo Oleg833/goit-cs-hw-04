@@ -44,3 +44,4 @@ if __name__ == "__main__":
     results = main_multiprocessing(files, keywords)
     for result in results:
         print(result, results[result])
+    
